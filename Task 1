@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+df = pd.read_csv('titanic.csv')
+
+# Step 2: Understand the Structure of the Data
+print(df.head())
+print(df.info())
+print(df.describe())
+
+# Step 3: Clean the Data
+# Handle missing values
+print(df.isnull().sum())
+df['Age'].fillna(df['Age'].median(), inplace=True)
+df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
+df.drop(columns='Cabin', inplace=True)  # Dropping 'Cabin' due to many missing values
+
+# Ensure that only numeric columns are selected for the correlation matrix
+numeric_df = df.select_dtypes(include=[np.number])
+
+# Step 4: Explore the Data's Characteristics
+# Distribution of 'Survived'
+sns.countplot(data=df, x='Survived')
+plt.title('Survival Count')
+plt.show()
+
+# Distribution of 'Age'
+sns.histplot(df['Age'], bins=30, kde=True)
+plt.title('Age Distribution')
+plt.show()
+
+# Step 5: Visualize Distributions
+# Histogram of 'Fare'
+sns.histplot(df['Fare'], bins=30, kde=True)
+plt.title('Fare Distribution')
+plt.show()
+
+# Box plot of 'Age' grouped by 'Survived'
+sns.boxplot(data=df, x='Survived', y='Age')
+plt.title('Age vs. Survival')
+plt.show()
+
+# Step 6: Analyze Correlations
+# Heatmap of correlations
+correlation_matrix = numeric_df.corr()
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+plt.title('Correlation Matrix')
+plt.show()
+
+# Step 7: Identify Outliers
+# Box plot of 'Fare'
+sns.boxplot(data=df, x='Fare')
+plt.title('Fare Box Plot')
+plt.show()
